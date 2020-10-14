@@ -47,6 +47,7 @@ def movies_response() -> List[dict]:
         return redis_movie_value
 
     people = get_people()
+    print(len(people))
 
     if(people):
         return movie_response_logic(people)
