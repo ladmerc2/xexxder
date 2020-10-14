@@ -10,6 +10,9 @@
 # Test
   - RUN `make test` this also shows coverage report
 
+# Lint Check
+  - RUN `make lint`
+
 # Notes
 
  ### Optimization
