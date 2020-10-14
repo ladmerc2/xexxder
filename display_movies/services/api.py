@@ -14,6 +14,10 @@ def get_people() -> list:
     """
     url = "https://ghibliapi.herokuapp.com/people?fields=id,name,films&limit=250"  # noqa: E501
     r = requests.get(url)
+    if r.status_code != 200:
+        # use proper logger here
+        print('Error occured fecthing people, send messsage to client')
+        return
     people = r.json()
     return people
 
@@ -25,7 +29,10 @@ def get_movies(movie_url: str) -> object:
     """
     r = requests.get(
         f"{movie_url}?fields=id,title,name,description,release_date")
-
+    if r.status_code != 200:
+        # use proper logger here
+        print('Error occured fetching movie, do not add to list')
+        return None
     movie = r.json()
     return movie
 
@@ -41,9 +48,21 @@ def movies_response() -> List[dict]:
     if redis_movie_value:
         return redis_movie_value
 
+    people = get_people()
+
+    if(people):
+        return movie_response_logic(people)
+    return
+
+
+def movie_response_logic(people: List[dict]) -> List[dict]:
+    """Perform mapping logic
+
+    Method to map persons to movies
+    """
+
     movie_urls_hash_store = {}
     structured_movie_data = []
-    people = get_people()
 
     for person in people:
         movies = person["films"]
@@ -63,17 +82,17 @@ def movies_response() -> List[dict]:
                 else:
                     # then add new movie w/ person to list
                     get_movie_data = get_movies(movie_url)
-                    movie = get_movie_data
-                    movie["people"] = [person]
-                    structured_movie_data.append(movie)
-                    movie_urls_hash_store[movie_url] = len(
-                        structured_movie_data) - 1
+                    if get_movie_data:
+                        movie = get_movie_data
+                        movie["people"] = [person]
+                        structured_movie_data.append(movie)
+                        movie_urls_hash_store[movie_url] = len(
+                            structured_movie_data) - 1
 
     movie_urls_hash_store = {}
 
     redis.set(redis_movie_key, structured_movie_data)
     return structured_movie_data
-
 
 # - Optimal space & time complexity
 # O(n) time | O(n) space - where n is the length of the input array

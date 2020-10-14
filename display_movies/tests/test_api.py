@@ -22,6 +22,15 @@ class TestGetMovie(unittest.TestCase):
         self.assertEqual(len(req), len(test_movie_resp))
         self.assertEqual(req['title'], "Castle in the Sky")
 
+    @requests_mock.Mocker()
+    def test_movie_bad_request(self, m):
+
+        m.get(self.MOCK_ADDRESS,
+              json=test_movie_resp, status_code=400)
+        req = api.get_movies(test_movie_url)
+
+        self.assertEqual(req, None)
+
 
 class TestGetPeople(unittest.TestCase):
 
@@ -36,6 +45,15 @@ class TestGetPeople(unittest.TestCase):
 
         self.assertEqual(len(req), len(test_people_resp))
         self.assertEqual(req[0]['name'], "Ashitaka")
+
+    @requests_mock.Mocker()
+    def test_people_bad_request(self, m):
+
+        m.get(self.MOCK_ADDRESS,
+              json=test_people_resp, status_code=400)
+        req = api.get_people()
+
+        self.assertEqual(req, None)
 
 
 data = {}
@@ -94,3 +112,17 @@ class TestMappingLogic(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(req, test_movies_resp)
+
+    @requests_mock.Mocker()
+    @patch('redis.StrictRedis.set')
+    @patch('redis.StrictRedis.get')
+    def test_movies_response_no_result(self, m, mock_redis_set, mock_redis_get):
+        mock_redis_set.side_effect = self.set(test_movies_resp)
+        mock_redis_get.side_effect = self.get
+
+        m.get(self.MOCK_PEOPLE_ADDRESS,
+              json=test_people_resp, status_code=400)
+
+        req = api.movies_response()
+
+        self.assertEqual(req, None)

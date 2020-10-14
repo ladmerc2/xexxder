@@ -19,8 +19,8 @@ class RedisCache():
     def get(self, key: str):
         """ Get retrieves the value of the given key from cache."""
         value = self._redis.get(key)
-
-        if value and type(value) == str:
+        validTypes = type(value) == str or type(value) == bytes
+        if value and validTypes:
             value = json.loads(value)
             return value
 
