@@ -16,7 +16,6 @@ def get_people() -> list:
     r = requests.get(url)
     if r.status_code != 200:
         # use proper logger here
-        print('Error occured fecthing people, send messsage to client')
         return
     people = r.json()
     return people
@@ -31,7 +30,6 @@ def get_movies(movie_url: str) -> object:
         f"{movie_url}?fields=id,title,name,description,release_date")
     if r.status_code != 200:
         # use proper logger here
-        print('Error occured fetching movie, do not add to list')
         return None
     movie = r.json()
     return movie
