@@ -6,13 +6,13 @@ FROM python:3
 ENV PYTHONUNBUFFERED 1
 
 # create root directory for our project in the container
-RUN mkdir /sennder
+RUN mkdir /sennder_service
 
 # Set the working directory
-WORKDIR /sennder
+WORKDIR /sennder_service
 
 # Copy the current directory contents into the container
-ADD . /sennder/
+ADD . /sennder_service/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt

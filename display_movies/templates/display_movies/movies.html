@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STUDIO GHIBLI</title>
+    <link crossorigin="anonymous"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"
+        integrity="sha256-8B1OaG0zT7uYA572S2xOxWACq9NXYPQ+U5kHPV1bJN4="
+        rel="stylesheet"/>
+    <link rel="shortcut icon" type="image/png" href=""/>
+</head>
+<body>
+    <nav aria-label="main navigation" class="navbar is-light" role="navigation">
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <img atl="DigitalOcean" src="https://ghibliapi.herokuapp.com/images/logo.svg"
+                    style="margin-right: 0.5em;">GHIBLI
+            </div>
+        </div>
+    </nav>
+
+    <table class="table is-fullwidth is-striped is-bordered">
+        <thead>
+            <tr>
+                <th>Movie Title</th>
+                <th>Movie Details</th>
+                <th>Actors</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movie in movies %}
+            <tr>
+                <th>{{ movie.title }}</th>
+                <td>
+                    <p>Desc: {{ movie.description }}</p>
+                    <p>Released: {{ movie.release_date }}</p>
+                </td>
+                <td>
+                    {% for actor in movie.people %}
+                        <small>{{ actor.name }},</small> &nbsp;
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
