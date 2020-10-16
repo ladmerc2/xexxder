@@ -1,14 +1,22 @@
 run_dev:
+	touch ./sennder/.env
+	cp .env.example sennder/.env
 	@echo "Running in development mode"
-	docker-compose up --build
+	docker-compose up
 
 run_prod:
+	touch ./sennder/.env
+	cp .env.example sennder/.env
 	@echo "Running in production mode"
 	docker-compose up
 
 lint:
-	flake8 display_movies --exclude=display_movies/tests/*,sennder/*
+	touch ./sennder/.env
+	cp .env.example sennder/.env
+	flake8 sennder/movies
 
 test:
-	coverage run --source='./display_movies' ./manage.py test display_movies/tests
+	touch ./sennder/.env
+	cp .env.example sennder/.env
+	coverage run --source='./sennder/movies' ./manage.py test
 	coverage report

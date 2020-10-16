@@ -13,7 +13,7 @@
     <nav aria-label="main navigation" class="navbar is-light" role="navigation">
         <div class="navbar-brand">
             <div class="navbar-item">
-                <img atl="DigitalOcean" src="https://ghibliapi.herokuapp.com/images/logo.svg"
+                <img atl="Sennder" src="https://ghibliapi.herokuapp.com/images/logo.svg"
                     style="margin-right: 0.5em;">GHIBLI
             </div>
         </div>
@@ -36,9 +36,11 @@
                     <p>Released: {{ movie.release_date }}</p>
                 </td>
                 <td>
+                    <ul>
                     {% for actor in movie.people %}
-                        <small>{{ actor.name }},</small> &nbsp;
+                        <li>{{ actor.name }}</li>
                     {% endfor %}
+                    </ul>
                 </td>
             </tr>
         {% endfor %}
