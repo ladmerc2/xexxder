@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Union
 
-from django.conf import settings
+from django.conf import settings  # type: ignore
+
 from .cache import RedisCache
 from .request import RequestService
 from ..entities import (
@@ -15,8 +16,8 @@ class MovieService:
 
     def __init__(self):
         self.redis = RedisCache()
-        self.redis_movie_key = "movies"
-        self.request = RequestService
+        self.REDIS_MOVIES_KEY = "movies"
+        self.request = RequestService()
 
     def get_people(self) -> list:
         """Get all people
@@ -33,7 +34,9 @@ class MovieService:
         people = r.json()
         return people
 
-    def get_movies(self, movie_url: str) -> MEntity.DictMovieEntity:
+    def get_movies(
+        self, movie_url: str
+    ) -> Union[MEntity.DictMovieEntity, dict]:
         """Return a movie data
 
         Makes external request to fetch movie data
@@ -47,14 +50,14 @@ class MovieService:
         movie = r.json()
         return movie
 
-    def get_movies_response(self) -> List[dict]:
+    def get_movies_response(self) -> List[MEntity.MappedMovieEntity]:
         """Return a list of movies
 
         Method returns a filtered list of movies with their actors
         And saving to cache
         """
 
-        redis_movie_value = self.redis.get(self.redis_movie_key)
+        redis_movie_value = self.redis.get(self.REDIS_MOVIES_KEY)
         if redis_movie_value:
             return redis_movie_value
         people = self.get_people() or []
@@ -76,7 +79,7 @@ class MovieService:
 
         for person in people:
             movies = person["films"]
-            for idx, movie_url in enumerate(movies):
+            for movie_url in movies:
                 if movie_url in movie_urls_hash_store:
                     # skip adding to hash
                     # but add person to movie list via index
@@ -101,9 +104,7 @@ class MovieService:
 
         movie_urls_hash_store = {}
 
-        self.redis.set(self.redis_movie_key, structured_movie_data)
+        self.redis.set(self.REDIS_MOVIES_KEY, structured_movie_data)
         return structured_movie_data
-
-
-# - Optimal space & time complexity
-# O(n) time | O(n) space - where n is the length of the input array
+        # - Optimal space & time complexity
+        # O(n) time | O(n) space - where n is the length of the input array

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .services import api
+from .services import api  # type: ignore
 
 
 def get_movies(request):

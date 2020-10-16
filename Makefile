@@ -15,6 +15,11 @@ lint:
 	cp .env.example sennder/.env
 	flake8 sennder/movies
 
+type:
+	touch ./sennder/.env
+	cp .env.example sennder/.env
+	mypy sennder/movies
+
 test:
 	touch ./sennder/.env
 	cp .env.example sennder/.env

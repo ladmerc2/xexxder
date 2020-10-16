@@ -8,6 +8,8 @@
   - A `.env` is auto-generated on project build just to avoid you manually creating an env file yourself for "this test"
   - When project is done building head over to http://localhost:8000/movies/
 
+To run any other Make target command outside of docker like: `make test`, `make type` etc, be sure to install the pip requirements locally: RUN `pip install -r requirements.txt`
+
 #### Test
   - RUN `make test` this also shows coverage report
   - To view coverage report in html RUN `coverage html` this would add a `htmlcov` folder to the root project, head over to the index.html and open that in browser

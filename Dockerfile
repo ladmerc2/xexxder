@@ -1,5 +1,5 @@
 # We Use an official Python runtime as a parent image
-FROM python:3-slim
+FROM python:3
 
 
 # Setting PYTHONUNBUFFERED to a non empty value ensures that the python output is sent straight to terminal (e.g. your container log) 
